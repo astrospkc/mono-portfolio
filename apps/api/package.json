@@ -1,0 +1,11 @@
+{
+  "name": "@mono/api",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "go run main.go",
+    "build": "mkdir -p bin && go build -o bin/server main.go",
+    "lint": "go vet ./...",
+    "clean": "rm -rf bin"
+  }
+}
