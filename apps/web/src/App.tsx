@@ -1,122 +1,132 @@
 import { useEffect, useState } from 'react';
-import { Layers, Server, Zap, Cpu, RefreshCw } from 'lucide-react';
-
-interface HealthResponse {
-  status: string;
-  timestamp: string;
-  uptime: string;
-  service: string;
-}
+import { 
+  Briefcase, 
+  Calendar, 
+  MapPin, 
+  Sparkles, 
+  Rss, 
+  Mail, 
+  Server
+} from 'lucide-react';
+import { Project, BlogPost, ApiHealth } from './types';
+import { fetchHealth, fetchProjects, fetchBlogs } from './api/api';
+import { FeedSection } from './components/sections/FeedSection';
+import { AboutSection } from './components/sections/AboutSection';
+import { ProjectsSection } from './components/sections/ProjectsSection';
+import { BlogSection } from './components/sections/BlogSection';
+import { ContactSection } from './components/sections/ContactSection';
 
 export function App() {
-  const [apiData, setApiData] = useState<HealthResponse | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchApiStatus = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch('/api/health');
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      const data: HealthResponse = await res.json();
-      setApiData(data);
-    } catch (err: any) {
-      console.error('Failed to fetch Go API health:', err);
-      setError(err.message || 'Unable to connect to Golang Backend');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [activeTab, setActiveTab] = useState<'feed' | 'about' | 'projects' | 'blog' | 'contact'>('feed');
+  
+  // API state
+  const [health, setHealth] = useState<ApiHealth | null>(null);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [blogs, setBlogs] = useState<BlogPost[]>([]);
 
   useEffect(() => {
-    fetchApiStatus();
+    fetchHealth().then(setHealth);
+    fetchProjects().then(setProjects);
+    fetchBlogs().then(setBlogs);
   }, []);
 
   return (
-    <div className="container">
-      <header className="header">
-        <div className="badge-row">
-          <span className="badge"><Layers size={14} /> Turborepo Monorepo</span>
-          <span className="badge"><Zap size={14} /> pnpm Workspaces</span>
-        </div>
-        <h1 className="title">Vite + React & Golang Monorepo</h1>
-        <p className="subtitle">
-          High-performance monorepo architecture powered by Turborepo, pnpm workspaces, Vite React frontend, and Go backend microservice.
-        </p>
-      </header>
-
-      <div className="grid">
-        {/* Frontend Card */}
-        <div className="card">
-          <div className="card-header">
-            <div className="card-icon icon-vite">
-              <Zap size={22} color="#fff" />
-            </div>
-            <h2 className="card-title">Vite + React App</h2>
-          </div>
-          <p className="card-desc">
-            Lightning-fast web frontend built with TypeScript, React 18, and Vite dev server proxied to Go API.
-          </p>
-          <div className="status-box">
-            <div style={{ marginBottom: '0.5rem', color: 'var(--text-muted)' }}>App Package:</div>
-            <div style={{ color: '#38bdf8' }}>apps/web (@mono/web)</div>
-          </div>
+    <div className="app-viewport">
+      <div className="browser-window">
+        {/* Browser Top Bar */}
+        <div className="browser-header">
+          <span className="dot dot-red"></span>
+          <span className="dot dot-yellow"></span>
+          <span className="dot dot-green"></span>
+          <span className="browser-title">mono_portfolio — Vite + React & GoFiber v3</span>
         </div>
 
-        {/* Backend Card */}
-        <div className="card">
-          <div className="card-header">
-            <div className="card-icon icon-go">
-              <Server size={22} color="#fff" />
+        {/* Profile Banner */}
+        <div className="profile-banner"></div>
+
+        {/* Profile Header Body */}
+        <div className="profile-header-body">
+          <div className="avatar-wrapper">
+            <div className="avatar-img">
+              P
             </div>
-            <h2 className="card-title">Golang Backend</h2>
+            <button className="btn-follow" onClick={() => setActiveTab('contact')}>
+              <Mail size={16} /> Contact Me <Rss size={14} />
+            </button>
           </div>
-          <p className="card-desc">
-            Robust and lightweight Go HTTP service configured to build and run seamlessly within Turborepo pipeline.
-          </p>
-          <div className="status-box">
-            <div style={{ marginBottom: '0.5rem', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span>API Health Status:</span>
-              <button 
-                onClick={fetchApiStatus} 
-                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
-                title="Refresh Status"
-              >
-                <RefreshCw size={14} className={loading ? 'spin' : ''} />
-              </button>
+
+          <div className="profile-name-row">
+            <h1 className="profile-name">Punam</h1>
+            <Sparkles className="sparkle-badge" size={20} />
+          </div>
+
+          <div className="profile-bio">
+            Brings ideas to life with code ✨
+          </div>
+
+          <div className="profile-subbio">
+            Full-Stack Engineer & Systems Architect. Specialized in High-Performance Golang Microservices, React, and Modern Monorepos.
+          </div>
+
+          <div className="profile-meta-row">
+            <div className="meta-item">
+              <Briefcase size={14} /> Systems Dev @ <span className="highlight-google">GoFiber</span>
             </div>
-            {loading ? (
-              <div style={{ color: 'var(--text-muted)' }}>Connecting to backend...</div>
-            ) : error ? (
-              <div>
-                <span className="status-indicator status-offline"></span>
-                <span style={{ color: '#f87171' }}>Offline ({error})</span>
-              </div>
-            ) : (
-              <div>
-                <span className="status-indicator status-online"></span>
-                <span style={{ color: '#4ade80' }}>Online ({apiData?.service})</span>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.3rem' }}>
-                  Uptime: {apiData?.uptime}
-                </div>
+            <div className="meta-item">
+              <MapPin size={14} /> /links
+            </div>
+            <div className="meta-item">
+              <Calendar size={14} /> Joined 2026
+            </div>
+            {health && (
+              <div className="meta-item" style={{ color: '#4ade80' }}>
+                <Server size={14} /> Backend: {health.service} ({health.status})
               </div>
             )}
           </div>
         </div>
-      </div>
 
-      <div className="card" style={{ marginBottom: 0 }}>
-        <div className="card-header">
-          <Cpu size={24} color="#a855f7" />
-          <h2 className="card-title">Monorepo Orchestration Commands</h2>
+        {/* Navigation Tabs Bar */}
+        <div className="nav-tabs">
+          <button 
+            className={`tab-btn ${activeTab === 'feed' ? 'active' : ''}`}
+            onClick={() => setActiveTab('feed')}
+          >
+            Feed
+          </button>
+          <button 
+            className={`tab-btn ${activeTab === 'about' ? 'active' : ''}`}
+            onClick={() => setActiveTab('about')}
+          >
+            About
+          </button>
+          <button 
+            className={`tab-btn ${activeTab === 'projects' ? 'active' : ''}`}
+            onClick={() => setActiveTab('projects')}
+          >
+            Projects
+          </button>
+          <button 
+            className={`tab-btn ${activeTab === 'blog' ? 'active' : ''}`}
+            onClick={() => setActiveTab('blog')}
+          >
+            Blog
+          </button>
+          <button 
+            className={`tab-btn ${activeTab === 'contact' ? 'active' : ''}`}
+            onClick={() => setActiveTab('contact')}
+          >
+            Contact Me
+          </button>
         </div>
-        <div className="status-box" style={{ lineHeight: '1.8' }}>
-          <div><code style={{ color: '#a855f7' }}>pnpm dev</code> &nbsp;- Run frontend and backend concurrently via Turborepo</div>
-          <div><code style={{ color: '#a855f7' }}>pnpm build</code> - Build production bundles for frontend and Go binary</div>
-          <div><code style={{ color: '#a855f7' }}>pnpm lint</code> &nbsp;- Typecheck TypeScript packages</div>
+
+        {/* Dynamic Tab Body */}
+        <div className="tab-content">
+          {activeTab === 'feed' && <FeedSection />}
+          {activeTab === 'about' && <AboutSection />}
+          {activeTab === 'projects' && <ProjectsSection projects={projects} />}
+          {activeTab === 'blog' && <BlogSection blogs={blogs} />}
+          {activeTab === 'contact' && <ContactSection />}
         </div>
       </div>
     </div>
