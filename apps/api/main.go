@@ -1,9 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"time"
+
+	"mono_portfolio/apps/api/src"
+	"mono_portfolio/apps/api/src/config"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
@@ -23,6 +27,17 @@ type MessageResponse struct {
 var startTime = time.Now()
 
 func main() {
+	// Connect to MongoDB
+	client, db, err := config.ConnectMongo()
+	if err != nil {
+		log.Fatalf("Failed to connect to MongoDB: %v", err)
+	}
+	defer func() {
+		if err := client.Disconnect(context.Background()); err != nil {
+			log.Printf("Error disconnecting MongoDB client: %v", err)
+		}
+	}()
+
 	app := fiber.New(fiber.Config{
 		AppName: "Mono Portfolio Go Fiber v3 API",
 	})
@@ -33,6 +48,9 @@ func main() {
 		AllowHeaders: []string{"Origin, Content-Type, Accept, Authorization"},
 		AllowMethods: []string{"GET, POST, HEAD, PUT, DELETE, PATCH, OPTIONS"},
 	}))
+
+	// Setup application routes
+	src.SetupRoutes(app, db)
 
 	// Health endpoint
 	app.Get("/api/health", func(c fiber.Ctx) error {
