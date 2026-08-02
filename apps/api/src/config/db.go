@@ -23,8 +23,6 @@ func ConnectMongo() (*mongo.Client, *mongo.Database, error) {
 		return nil, nil, fmt.Errorf("MONGO_DB_NAME is not set")
 	}
 
-	log.Println("Connecting to MongoDB URI:", uri)
-
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
