@@ -248,7 +248,7 @@ export function AdminSection() {
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="astros_123"
+                placeholder="xyz"
                 style={{
                   width: '100%',
                   padding: '0.65rem 0.65rem 0.65rem 2.5rem',
