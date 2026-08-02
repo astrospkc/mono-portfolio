@@ -15,7 +15,7 @@ export function FeedSection({ feeds }: FeedSectionProps) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-      {feeds.map((item, index) => (
+      {feeds?.map((item, index) => (
         <div
           key={item.id || item._id || index}
           className="info-card"
@@ -25,19 +25,19 @@ export function FeedSection({ feeds }: FeedSectionProps) {
               : undefined
           }
         >
-          {item.category && <span className="card-tag">{item.category}</span>}
+          {item?.category && <span className="card-tag">{item?.category}</span>}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
             <div style={{ fontWeight: 700, fontSize: '1.05rem' }}>Punam ✨</div>
-            {item.timestamp && (
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>• {item.timestamp}</span>
+            {item?.timestamp && (
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>• {item?.timestamp}</span>
             )}
           </div>
           <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '1.05rem', marginBottom: item.image ? '1rem' : 0 }}>
-            {item.content}
+            {item?.content}
           </p>
-          {item.image && (
+          {item?.image && (
             <img
-              src={item.image}
+              src={item?.image}
               alt="Feed attachment"
               style={{
                 width: '100%',
