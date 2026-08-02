@@ -15,12 +15,12 @@ func ConnectMongo() (*mongo.Client, *mongo.Database, error) {
 	envs := NewEnv()
 	uri := envs.MONGO_URI
 	if uri == "" {
-		uri = "mongodb://localhost:27017"
+		return nil, nil, fmt.Errorf("MONGO_URI is not set")
 	}
 
 	dbName := envs.MONGO_DB_NAME
 	if dbName == "" {
-		dbName = "portfolio_db"
+		return nil, nil, fmt.Errorf("MONGO_DB_NAME is not set")
 	}
 
 	log.Println("Connecting to MongoDB URI:", uri)
