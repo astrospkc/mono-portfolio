@@ -167,6 +167,7 @@ export function App() {
             <Route path="/projects" element={<ProjectsSection projects={projects} />} />
             <Route path="/blog" element={<BlogSection blogs={blogs} />} />
             <Route path="/contact" element={<ContactSection />} />
+            <Route path="/admin" element={<AdminSection />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
