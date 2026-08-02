@@ -10,16 +10,18 @@ import (
 type Project struct {
 	ID bson.ObjectID `bson:"_id,omitempty" json:"id"`
 
-	ProjectID   string     `bson:"project_id" json:"project_id"`
-	GithubLink  string     `bson:"github_link" json:"github_link"`
-	Image       string     `bson:"image" json:"image"`
-	Description string     `bson:"description" json:"description"`
-	DemoLink    string     `bson:"demo_link" json:"demo_link"`
-	StartDate   time.Time  `bson:"start_date" json:"start_date"`
-	FinishDate  *time.Time `bson:"finish_date,omitempty" json:"finish_date,omitempty"` // nil indicates ongoing project
-	IsOngoing   bool       `bson:"is_ongoing" json:"is_ongoing"`
-	CreatedAt   time.Time  `bson:"created_at" json:"created_at"`
-	UpdatedAt   time.Time  `bson:"updated_at" json:"updated_at"`
+	ProjectID   string `bson:"project_id" json:"project_id"`
+	Title       string `bson:"title" json:"title"`
+	GithubLink  string `bson:"github_link" json:"github_link"`
+	Image       string `bson:"image" json:"image"`
+	Description string `bson:"description" json:"description"`
+	DemoLink    string `bson:"demo_link" json:"demo_link"`
+
+	StartDate  time.Time  `bson:"start_date" json:"start_date"`
+	FinishDate *time.Time `bson:"finish_date,omitempty" json:"finish_date,omitempty"` // nil indicates ongoing project
+	IsOngoing  bool       `bson:"is_ongoing" json:"is_ongoing"`
+	CreatedAt  time.Time  `bson:"created_at" json:"created_at"`
+	UpdatedAt  time.Time  `bson:"updated_at" json:"updated_at"`
 }
 
 // Blog represents a blog entry in MongoDB.
@@ -29,8 +31,10 @@ type Blog struct {
 	Title       string        `bson:"title" json:"title"`
 	Image       string        `bson:"image" json:"image"`
 	Description string        `bson:"description" json:"description"`
-	CreatedAt   time.Time     `bson:"created_at" json:"created_at"`
-	UpdatedAt   time.Time     `bson:"updated_at" json:"updated_at"`
+	IsOngoing   bool          `bson:"is_ongoing" json:"is_ongoing"`
+
+	CreatedAt time.Time `bson:"created_at" json:"created_at"`
+	UpdatedAt time.Time `bson:"updated_at" json:"updated_at"`
 }
 
 // Feed represents a feed item in MongoDB.
@@ -41,6 +45,8 @@ type Feed struct {
 	Title     string        `bson:"title" json:"title"`
 	Content   string        `bson:"content" json:"content"`
 	MediaURL  string        `bson:"media_url,omitempty" json:"media_url,omitempty"`
-	CreatedAt time.Time     `bson:"created_at" json:"created_at"`
-	UpdatedAt time.Time     `bson:"updated_at" json:"updated_at"`
+	IsOngoing bool          `bson:"is_ongoing" json:"is_ongoing"`
+
+	CreatedAt time.Time `bson:"created_at" json:"created_at"`
+	UpdatedAt time.Time `bson:"updated_at" json:"updated_at"`
 }

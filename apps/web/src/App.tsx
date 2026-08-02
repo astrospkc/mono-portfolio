@@ -1,34 +1,69 @@
 import { useEffect, useState } from 'react';
-import { 
-  Briefcase, 
-  Calendar, 
-  MapPin, 
-  Sparkles, 
-  Rss, 
-  Mail, 
-  Server
+import {
+  Briefcase,
+  Calendar,
+  MapPin,
+  Sparkles,
+  Rss,
+  Mail,
+  Server,
+  Github,
+  Linkedin,
+  Youtube,
+  Instagram
 } from 'lucide-react';
-import { Project, BlogPost, ApiHealth } from './types';
-import { fetchHealth, fetchProjects, fetchBlogs } from './api/api';
+import { Project, BlogPost, ApiHealth, FeedItem } from './types';
+import { fetchHealth, fetchProjects, fetchBlogs, fetchFeeds } from './api/api';
 import { FeedSection } from './components/sections/FeedSection';
 import { AboutSection } from './components/sections/AboutSection';
 import { ProjectsSection } from './components/sections/ProjectsSection';
 import { BlogSection } from './components/sections/BlogSection';
 import { ContactSection } from './components/sections/ContactSection';
+import { AdminSection } from './components/sections/AdminSection';
 
 export function App() {
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
   const [activeTab, setActiveTab] = useState<'feed' | 'about' | 'projects' | 'blog' | 'contact'>('feed');
-  
+
   // API state
   const [health, setHealth] = useState<ApiHealth | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [feeds, setFeeds] = useState<FeedItem[]>([]);
 
   useEffect(() => {
-    fetchHealth().then(setHealth);
-    fetchProjects().then(setProjects);
-    fetchBlogs().then(setBlogs);
+    const handlePopState = () => setCurrentPath(window.location.pathname);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
+
+  useEffect(() => {
+    if (currentPath !== '/admin') {
+      fetchHealth().then(setHealth);
+      fetchProjects().then(setProjects);
+      fetchBlogs().then(setBlogs);
+      fetchFeeds().then(setFeeds);
+    }
+  }, [currentPath]);
+
+  // If path is /admin, render standalone Admin Dashboard Page
+  if (currentPath === '/admin' || currentPath === '/admin/') {
+    return (
+      <div className="app-viewport">
+        <div className="browser-window">
+          <div className="browser-header">
+            <span className="dot dot-red"></span>
+            <span className="dot dot-yellow"></span>
+            <span className="dot dot-green"></span>
+            <span className="browser-title">mono_portfolio — Admin Dashboard (/admin)</span>
+          </div>
+          <div style={{ padding: '1.5rem 1rem' }}>
+            <AdminSection />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="app-viewport">
@@ -70,14 +105,24 @@ export function App() {
 
           <div className="profile-meta-row">
             <div className="meta-item">
-              <Briefcase size={14} /> Systems Dev @ <span className="highlight-google">GoFiber</span>
+              <Briefcase size={14} /> Fullstack Engineer @ <span className="highlight-google">Punam</span>
             </div>
-            <div className="meta-item">
-              <MapPin size={14} /> /links
+
+            <div className="social-links-group">
+              <a href="https://github.com/astrospkc" target="_blank" rel="noopener noreferrer" className="social-link-pill">
+                <Github size={14} /> Github
+              </a>
+              <a href="https://www.linkedin.com/in/punam-k-2018951b6/" target="_blank" rel="noopener noreferrer" className="social-link-pill">
+                <Linkedin size={14} /> Linkedin
+              </a>
+              <a href="https://www.youtube.com/@im_unfiltered1" target="_blank" rel="noopener noreferrer" className="social-link-pill">
+                <Youtube size={14} /> Youtube
+              </a>
+              <a href="https://www.instagram.com/im_unfiltered1/" target="_blank" rel="noopener noreferrer" className="social-link-pill">
+                <Instagram size={14} /> Instagram
+              </a>
             </div>
-            <div className="meta-item">
-              <Calendar size={14} /> Joined 2026
-            </div>
+
             {health && (
               <div className="meta-item" style={{ color: '#4ade80' }}>
                 <Server size={14} /> Backend: {health.service} ({health.status})
@@ -88,31 +133,31 @@ export function App() {
 
         {/* Navigation Tabs Bar */}
         <div className="nav-tabs">
-          <button 
+          <button
             className={`tab-btn ${activeTab === 'feed' ? 'active' : ''}`}
             onClick={() => setActiveTab('feed')}
           >
             Feed
           </button>
-          <button 
+          <button
             className={`tab-btn ${activeTab === 'about' ? 'active' : ''}`}
             onClick={() => setActiveTab('about')}
           >
             About
           </button>
-          <button 
+          <button
             className={`tab-btn ${activeTab === 'projects' ? 'active' : ''}`}
             onClick={() => setActiveTab('projects')}
           >
             Projects
           </button>
-          <button 
+          <button
             className={`tab-btn ${activeTab === 'blog' ? 'active' : ''}`}
             onClick={() => setActiveTab('blog')}
           >
             Blog
           </button>
-          <button 
+          <button
             className={`tab-btn ${activeTab === 'contact' ? 'active' : ''}`}
             onClick={() => setActiveTab('contact')}
           >
@@ -122,7 +167,7 @@ export function App() {
 
         {/* Dynamic Tab Body */}
         <div className="tab-content">
-          {activeTab === 'feed' && <FeedSection />}
+          {activeTab === 'feed' && <FeedSection feeds={feeds} />}
           {activeTab === 'about' && <AboutSection />}
           {activeTab === 'projects' && <ProjectsSection projects={projects} />}
           {activeTab === 'blog' && <BlogSection blogs={blogs} />}
@@ -134,3 +179,5 @@ export function App() {
 }
 
 export default App;
+
+

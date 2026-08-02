@@ -1,19 +1,35 @@
 export interface Project {
-  id: string;
+  id?: string;
+  _id?: string;
   title: string;
   description: string;
   tags: string[];
   stars: number;
-  link: string;
+  link?: string;
+  github_link?: string;
+  demo_link?: string;
+  image?: string;
 }
 
 export interface BlogPost {
-  id: string;
+  id?: string;
+  _id?: string;
   title: string;
   snippet: string;
   date: string;
   readTime: string;
   tags: string[];
+  image?: string;
+}
+
+export interface FeedItem {
+  id?: string;
+  _id?: string;
+  content: string;
+  timestamp: string;
+  likes?: number;
+  category?: string;
+  image?: string;
 }
 
 export interface ApiHealth {
@@ -28,3 +44,4 @@ export interface ContactFormData {
   subject: string;
   message: string;
 }
+

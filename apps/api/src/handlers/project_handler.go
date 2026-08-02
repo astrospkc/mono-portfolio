@@ -26,6 +26,7 @@ func NewProjectHandler(db *mongo.Database) *ProjectHandler {
 type CreateProjectDTO struct {
 	ProjectID   string     `json:"project_id"`
 	GithubLink  string     `json:"github_link"`
+	Title       string     `json:"title"`
 	Image       string     `json:"image"`
 	Description string     `json:"description"`
 	DemoLink    string     `json:"demo_link"`
@@ -37,6 +38,7 @@ type CreateProjectDTO struct {
 // UpdateProjectDTO defines the payload for full/partial updates.
 type UpdateProjectDTO struct {
 	GithubLink  *string    `json:"github_link,omitempty"`
+	Title       *string    `json:"title,omitempty"`
 	Image       *string    `json:"image,omitempty"`
 	Description *string    `json:"description,omitempty"`
 	DemoLink    *string    `json:"demo_link,omitempty"`
@@ -59,12 +61,14 @@ func (h *ProjectHandler) Create(c fiber.Ctx) error {
 
 		"project_id":  dto.ProjectID,
 		"github_link": dto.GithubLink,
+		"title":       dto.Title,
 		"image":       dto.Image,
 		"description": dto.Description,
 		"demo_link":   dto.DemoLink,
+
 		"start_date":  dto.StartDate,
 		"finish_date": dto.FinishDate,
-		"is_ongoing":  dto.IsOngoing,
+		"is_ongoing":  true,
 		"created_at":  now,
 		"updated_at":  now,
 	}
@@ -84,7 +88,7 @@ func (h *ProjectHandler) Create(c fiber.Ctx) error {
 
 // GetAll handles GET /projects
 func (h *ProjectHandler) GetAll(c fiber.Ctx) error {
-	cursor, err := h.collection.Find(context.Background(), bson.M{})
+	cursor, err := h.collection.Find(context.Background(), bson.M{"is_ongoing": true})
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
 			"error": "Failed to fetch projects: " + err.Error(),
@@ -149,6 +153,7 @@ func (h *ProjectHandler) Update(c fiber.Ctx) error {
 
 			"project_id":  dto.ProjectID,
 			"github_link": dto.GithubLink,
+			"title":       dto.Title,
 			"image":       dto.Image,
 			"description": dto.Description,
 			"demo_link":   dto.DemoLink,
@@ -200,6 +205,9 @@ func (h *ProjectHandler) Patch(c fiber.Ctx) error {
 	if dto.GithubLink != nil {
 		updates["github_link"] = *dto.GithubLink
 	}
+	if dto.Title != nil {
+		updates["title"] = *dto.Title
+	}
 	if dto.Image != nil {
 		updates["image"] = *dto.Image
 	}
@@ -246,13 +254,18 @@ func (h *ProjectHandler) Delete(c fiber.Ctx) error {
 		})
 	}
 
-	res, err := h.collection.DeleteOne(context.Background(), bson.M{"_id": objID})
+	updates := bson.M{
+		"updated_at": time.Now(),
+	}
+	updates["is_ongoing"] = "false"
+
+	res, err := h.collection.UpdateOne(context.Background(), bson.M{"_id": objID}, bson.M{"$set": updates})
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
 			"error": "Failed to delete project: " + err.Error(),
 		})
 	}
-	if res.DeletedCount == 0 {
+	if res.MatchedCount == 0 {
 		return c.Status(http.StatusNotFound).JSON(fiber.Map{
 			"error": "Project not found",
 		})

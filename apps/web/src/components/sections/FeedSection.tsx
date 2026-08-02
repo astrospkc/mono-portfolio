@@ -1,47 +1,56 @@
-export function FeedSection() {
+import { FeedItem } from '../../types';
+
+interface FeedSectionProps {
+  feeds: FeedItem[];
+}
+
+export function FeedSection({ feeds }: FeedSectionProps) {
+  if (!feeds || feeds.length === 0) {
+    return (
+      <div className="info-card" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
+        No feed posts found.
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <div className="info-card" style={{ marginBottom: '1.5rem', background: 'linear-gradient(135deg, rgba(236,72,153,0.08) 0%, rgba(168,85,247,0.05) 100%)' }}>
-        <span className="card-tag">Pinned Cheep</span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-          <div style={{ fontWeight: 700, fontSize: '1.05rem' }}>Punam ✨</div>
-          <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>• 20 Jan 2026</span>
-        </div>
-        <div style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '0.5rem', color: '#fff' }}>
-          Hello World! Welcome to my monorepo portfolio.
-        </div>
-        <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-          Building scalable backend engines with GoFiber v3 and sleek user interfaces using React & TypeScript. Explore my projects, read technical articles, or send me a direct message to my inbox below!
-        </p>
-      </div>
-
-      <div className="content-grid">
-        <div className="info-card">
-          <span className="card-tag">Tech Stack</span>
-          <h3 className="card-title">GoFiber v3 & Turborepo</h3>
-          <p className="card-desc">
-            Ultra-fast HTTP routing with GoFiber v3 coupled with pnpm workspace package orchestration.
-          </p>
-          <div className="tag-list">
-            <span className="tag-chip">Golang v1.25</span>
-            <span className="tag-chip">Fiber v3</span>
-            <span className="tag-chip">Turborepo</span>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+      {feeds.map((item, index) => (
+        <div
+          key={item.id || item._id || index}
+          className="info-card"
+          style={
+            index === 0
+              ? { background: 'linear-gradient(135deg, rgba(236,72,153,0.08) 0%, rgba(168,85,247,0.05) 100%)' }
+              : undefined
+          }
+        >
+          {item.category && <span className="card-tag">{item.category}</span>}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
+            <div style={{ fontWeight: 700, fontSize: '1.05rem' }}>Punam ✨</div>
+            {item.timestamp && (
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>• {item.timestamp}</span>
+            )}
           </div>
-        </div>
-
-        <div className="info-card">
-          <span className="card-tag">Frontend System</span>
-          <h3 className="card-title">Vite + React 18</h3>
-          <p className="card-desc">
-            Blazing-fast client application with glassmorphic dark design and instant hot reloading.
+          <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6', fontSize: '1.05rem', marginBottom: item.image ? '1rem' : 0 }}>
+            {item.content}
           </p>
-          <div className="tag-list">
-            <span className="tag-chip">React</span>
-            <span className="tag-chip">TypeScript</span>
-            <span className="tag-chip">Vite</span>
-          </div>
+          {item.image && (
+            <img
+              src={item.image}
+              alt="Feed attachment"
+              style={{
+                width: '100%',
+                maxHeight: '320px',
+                objectFit: 'cover',
+                borderRadius: '8px',
+                marginTop: '0.5rem',
+                border: '1px solid rgba(255, 255, 255, 0.1)'
+              }}
+            />
+          )}
         </div>
-      </div>
+      ))}
     </div>
   );
 }
