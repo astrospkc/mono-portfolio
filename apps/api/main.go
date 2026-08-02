@@ -44,7 +44,7 @@ func main() {
 
 	// Add CORS middleware
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"https://mono-portfolio-web.vercel.app/", "http://localhost:3000", "http://localhost:5173"},
+		AllowOrigins: []string{"https://mono-portfolio-web.vercel.app", "http://localhost:3000"},
 		AllowHeaders: []string{"Origin, Content-Type, Accept, Authorization"},
 		AllowMethods: []string{"GET, POST, HEAD, PUT, DELETE, PATCH, OPTIONS"},
 	}))
