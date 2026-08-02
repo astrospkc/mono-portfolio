@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import {
   Briefcase,
-  Calendar,
-  MapPin,
+ 
+ 
   Sparkles,
   Rss,
   Mail,
