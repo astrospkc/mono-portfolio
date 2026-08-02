@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
+import { Routes, Route, NavLink, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import {
   Briefcase,
- 
- 
   Sparkles,
   Rss,
   Mail,
@@ -22,8 +21,8 @@ import { ContactSection } from './components/sections/ContactSection';
 import { AdminSection } from './components/sections/AdminSection';
 
 export function App() {
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
-  const [activeTab, setActiveTab] = useState<'feed' | 'about' | 'projects' | 'blog' | 'contact'>('feed');
+  const location = useLocation();
+  const navigate = useNavigate();
 
   // API state
   const [health, setHealth] = useState<ApiHealth | null>(null);
@@ -32,22 +31,16 @@ export function App() {
   const [feeds, setFeeds] = useState<FeedItem[]>([]);
 
   useEffect(() => {
-    const handlePopState = () => setCurrentPath(window.location.pathname);
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
-
-  useEffect(() => {
-    if (currentPath !== '/admin') {
+    if (!location.pathname.startsWith('/admin')) {
       fetchHealth().then(setHealth);
       fetchProjects().then(setProjects);
       fetchBlogs().then(setBlogs);
       fetchFeeds().then(setFeeds);
     }
-  }, [currentPath]);
+  }, [location.pathname]);
 
-  // If path is /admin, render standalone Admin Dashboard Page
-  if (currentPath === '/admin' || currentPath === '/admin/') {
+  // If path starts with /admin, render standalone Admin Dashboard Page
+  if (location.pathname.startsWith('/admin')) {
     return (
       <div className="app-viewport">
         <div className="browser-window">
@@ -85,7 +78,7 @@ export function App() {
             <div className="avatar-img">
               P
             </div>
-            <button className="btn-follow" onClick={() => setActiveTab('contact')}>
+            <button className="btn-follow" onClick={() => navigate('/contact')}>
               <Mail size={16} /> Contact Me <Rss size={14} />
             </button>
           </div>
@@ -133,45 +126,49 @@ export function App() {
 
         {/* Navigation Tabs Bar */}
         <div className="nav-tabs">
-          <button
-            className={`tab-btn ${activeTab === 'feed' ? 'active' : ''}`}
-            onClick={() => setActiveTab('feed')}
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) => `tab-btn ${isActive ? 'active' : ''}`}
           >
             Feed
-          </button>
-          <button
-            className={`tab-btn ${activeTab === 'about' ? 'active' : ''}`}
-            onClick={() => setActiveTab('about')}
+          </NavLink>
+          <NavLink
+            to="/about"
+            className={({ isActive }) => `tab-btn ${isActive ? 'active' : ''}`}
           >
             About
-          </button>
-          <button
-            className={`tab-btn ${activeTab === 'projects' ? 'active' : ''}`}
-            onClick={() => setActiveTab('projects')}
+          </NavLink>
+          <NavLink
+            to="/projects"
+            className={({ isActive }) => `tab-btn ${isActive ? 'active' : ''}`}
           >
             Projects
-          </button>
-          <button
-            className={`tab-btn ${activeTab === 'blog' ? 'active' : ''}`}
-            onClick={() => setActiveTab('blog')}
+          </NavLink>
+          <NavLink
+            to="/blog"
+            className={({ isActive }) => `tab-btn ${isActive ? 'active' : ''}`}
           >
             Blog
-          </button>
-          <button
-            className={`tab-btn ${activeTab === 'contact' ? 'active' : ''}`}
-            onClick={() => setActiveTab('contact')}
+          </NavLink>
+          <NavLink
+            to="/contact"
+            className={({ isActive }) => `tab-btn ${isActive ? 'active' : ''}`}
           >
             Contact Me
-          </button>
+          </NavLink>
         </div>
 
-        {/* Dynamic Tab Body */}
+        {/* Dynamic Tab Body with Routes */}
         <div className="tab-content">
-          {activeTab === 'feed' && <FeedSection feeds={feeds} />}
-          {activeTab === 'about' && <AboutSection />}
-          {activeTab === 'projects' && <ProjectsSection projects={projects} />}
-          {activeTab === 'blog' && <BlogSection blogs={blogs} />}
-          {activeTab === 'contact' && <ContactSection />}
+          <Routes>
+            <Route path="/" element={<FeedSection feeds={feeds} />} />
+            <Route path="/about" element={<AboutSection />} />
+            <Route path="/projects" element={<ProjectsSection projects={projects} />} />
+            <Route path="/blog" element={<BlogSection blogs={blogs} />} />
+            <Route path="/contact" element={<ContactSection />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
         </div>
       </div>
     </div>
@@ -179,5 +176,3 @@ export function App() {
 }
 
 export default App;
-
-
