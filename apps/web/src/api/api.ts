@@ -2,7 +2,7 @@ import { ApiHealth, Project, BlogPost, ContactFormData, FeedItem } from '../type
 import baseUrl from '../service/api_service';
 export async function fetchHealth(): Promise<ApiHealth | null> {
   try {
-    const res = await fetch('/api/health');
+    const res = await fetch(`${baseUrl}/api/health`);
     if (!res.ok) return null;
     return await res.json();
   } catch (err) {
