@@ -75,8 +75,8 @@ export function App() {
         {/* Profile Header Body */}
         <div className="profile-header-body">
           <div className="avatar-wrapper">
-            <div className="avatar-img">
-              P
+            <div className="avatar-img" style={{ overflow: 'hidden', padding: 0 }}>
+              <img src="/anime_pic.png" alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <button className="btn-follow" onClick={() => navigate('/contact')}>
               <Mail size={16} /> Contact Me <Rss size={14} />

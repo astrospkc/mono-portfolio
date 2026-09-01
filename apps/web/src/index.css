@@ -29,7 +29,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   /* Grid pattern background inspired by Image 1 */
-  background-image: 
+  background-image:
     linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid-line-color) 1px, transparent 1px);
   background-size: 40px 40px;
@@ -68,9 +68,17 @@ body {
   display: inline-block;
 }
 
-.dot-red { background-color: #ef4444; }
-.dot-yellow { background-color: #f59e0b; }
-.dot-green { background-color: #10b981; }
+.dot-red {
+  background-color: #ef4444;
+}
+
+.dot-yellow {
+  background-color: #f59e0b;
+}
+
+.dot-green {
+  background-color: #10b981;
+}
 
 .browser-title {
   font-family: var(--font-mono);
@@ -82,8 +90,10 @@ body {
 
 /* Banner section */
 .profile-banner {
-  height: 160px;
-  background: linear-gradient(135deg, #1e1b4b 0%, #311042 50%, #030712 100%);
+  height: 220px;
+  background-image: url('/banner.jpg');
+  background-size: cover;
+  background-position: center;
   position: relative;
 }
 
@@ -348,7 +358,8 @@ body {
   color: var(--text-secondary);
 }
 
-.form-input, .form-textarea {
+.form-input,
+.form-textarea {
   background: rgba(5, 5, 8, 0.8);
   border: 1px solid var(--card-border);
   border-radius: 0.75rem;
@@ -360,7 +371,8 @@ body {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.form-input:focus, .form-textarea:focus {
+.form-input:focus,
+.form-textarea:focus {
   border-color: var(--accent-pink);
   box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15);
 }
