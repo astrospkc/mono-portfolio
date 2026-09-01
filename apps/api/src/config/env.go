@@ -7,9 +7,11 @@ import (
 )
 
 type ENV struct {
-	MONGO_URI     string `mapstructure:"MONGO_URI"`
-	MONGO_DB_NAME string `mapstructure:"MONGO_DB_NAME"`
-	JWT_SECRET    string `mapstructure:"JWT_SECRET"`
+	MONGO_URI         string `mapstructure:"MONGO_URI"`
+	MONGO_DB_NAME     string `mapstructure:"MONGO_DB_NAME"`
+	JWT_SECRET        string `mapstructure:"JWT_SECRET"`
+	RESEND_API_KEY    string `mapstructure:"RESEND_API_KEY"`
+	MY_PERSONAL_EMAIL string `mapstructure:"MY_PERSONAL_EMAIL"`
 }
 
 func NewEnv() *ENV {

@@ -1,10 +1,13 @@
 package src
 
 import (
+	"time"
+
 	"mono_portfolio/apps/api/src/handlers"
 	"mono_portfolio/apps/api/src/middleware"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/limiter"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
@@ -53,4 +56,19 @@ func SetupRoutes(app *fiber.App, db *mongo.Database) {
 	feeds.Put("/:id", middleware.AdminAuthMiddleware(), feedHandler.Update)
 	feeds.Patch("/:id", middleware.AdminAuthMiddleware(), feedHandler.Patch)
 	feeds.Delete("/:id", middleware.AdminAuthMiddleware(), feedHandler.Delete)
+
+	// Contact Limiter: Max 3 emails per 15 minutes per IP address
+	contactLimiter := limiter.New(limiter.Config{
+		Max:        3,
+		Expiration: 15 * time.Minute,
+		LimitReached: func(c fiber.Ctx) error {
+			return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
+				"success": false,
+				"message": "Too many requests. Please try again after 15 minutes.",
+			})
+		},
+	})
+
+	contact := api.Group("/contact")
+	contact.Post("/", contactLimiter, handlers.SendContactEmail)
 }

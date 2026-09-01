@@ -8,6 +8,7 @@ import (
 
 	"mono_portfolio/apps/api/src"
 	"mono_portfolio/apps/api/src/config"
+	"mono_portfolio/apps/api/src/service"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
@@ -27,6 +28,9 @@ type MessageResponse struct {
 var startTime = time.Now()
 
 func main() {
+	// Initialize Resend Email Service Client
+	service.InitEmailClient()
+
 	// Connect to MongoDB
 	client, db, err := config.ConnectMongo()
 	if err != nil {

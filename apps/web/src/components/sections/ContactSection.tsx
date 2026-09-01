@@ -29,6 +29,7 @@ export function ContactSection() {
     } finally {
       setSubmitting(false);
     }
+    console.log(formData);
   };
 
   return (
@@ -58,8 +59,8 @@ export function ContactSection() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <div className="form-group">
             <label className="form-label">Your Name</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               className="form-input"
               placeholder="e.g. Alex Johnson"
               required
@@ -69,8 +70,8 @@ export function ContactSection() {
           </div>
           <div className="form-group">
             <label className="form-label">Your Email</label>
-            <input 
-              type="email" 
+            <input
+              type="email"
               className="form-input"
               placeholder="alex@example.com"
               required
@@ -82,8 +83,8 @@ export function ContactSection() {
 
         <div className="form-group">
           <label className="form-label">Subject</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             className="form-input"
             placeholder="Project Inquiry / Collaboration"
             required
@@ -94,7 +95,7 @@ export function ContactSection() {
 
         <div className="form-group">
           <label className="form-label">Message</label>
-          <textarea 
+          <textarea
             className="form-textarea"
             placeholder="Write your message here..."
             required
