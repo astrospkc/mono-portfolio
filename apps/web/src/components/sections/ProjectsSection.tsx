@@ -5,12 +5,26 @@ interface ProjectsSectionProps {
   projects: Project[];
 }
 
+let default_projects: Project[] = [
+  {
+    _id: '1',
+    title: 'BotRAG',
+    description: "A custom Retrieval-Augmented Generation (RAG) Chatbot Service built as a modern monorepo. This platform enables companies or individual users to upload/provide their domain documents, automatically chunk & index knowledge into a vector database, and generate tailored AI chatbots for their end users.",
+    tags: ['React', 'Python', 'PostgreSQL', 'LangChain', 'RabbitMQ', 'Celery', 'OpenRouter', "Google-Genai"],
+    stars: 0,
+    link: 'https://github.com/astrospkc/Rag-Chatbot',
+    github_link: 'https://github.com/astrospkc/Rag-Chatbot',
+    demo_link: '',
+    image: 'https://res.cloudinary.com/dqedj96c7/image/upload/v1754861511/Screenshot_2026-09-01_at_14.54.22_g2s73r.png'
+  }
+]
+
 export function ProjectsSection({ projects }: ProjectsSectionProps) {
   return (
     <div>
       <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.25rem' }}>Featured Projects</h2>
       <div className="content-grid">
-        {projects && projects.length > 0 ? projects?.map((item, index) => {
+        {(projects && projects.length > 0 ? projects : default_projects).map((item, index) => {
           const repoUrl = item?.github_link || (item?.link?.includes('github.com') ? item?.link : undefined);
           const demoUrl = item?.demo_link || (!item?.link?.includes('github.com') ? item?.link : undefined);
 
@@ -62,9 +76,7 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
               )}
             </div>
           );
-        }) : <>
-          No Projects Available
-        </>}
+        })}
       </div>
     </div>
   );

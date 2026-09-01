@@ -4,8 +4,19 @@ interface FeedSectionProps {
   feeds: FeedItem[];
 }
 
+let default_feeds: FeedItem[] = [
+  {
+    _id: '1',
+    content: 'My custom RAG chatbot service is now live on Product Hunt! 🎉 Check out BotRAG and let me know what you think. Your support means the world to me!',
+    timestamp: '2026-09-01',
+    likes: 0,
+    category: 'BotRAG Launch',
+    image: 'https://res.cloudinary.com/dqedj96c7/image/upload/v1754861511/Screenshot_2026-09-01_at_14.54.22_g2s73r.png'
+  }
+]
+
 export function FeedSection({ feeds }: FeedSectionProps) {
-  if (!feeds || feeds.length === 0) {
+  if ((!feeds || feeds.length === 0) && (!default_feeds || default_feeds.length === 0)) {
     return (
       <div className="info-card" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
         No feed posts found.
@@ -15,7 +26,7 @@ export function FeedSection({ feeds }: FeedSectionProps) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-      {feeds?.map((item, index) => (
+      {(feeds && feeds.length > 0 ? feeds : default_feeds).map((item, index) => (
         <div
           key={item.id || item._id || index}
           className="info-card"
