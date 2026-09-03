@@ -7,10 +7,10 @@ interface FeedSectionProps {
 let default_feeds: FeedItem[] = [
   {
     _id: '1',
-    content: 'My custom RAG chatbot service is now live on Product Hunt! 🎉 Check out BotRAG and let me know what you think. Your support means the world to me!',
+    content: 'Working on rag-chatbot, a new AI-powered chatbot that can answer questions and provide information on various topics. Stay tuned for updates!',
     timestamp: '2026-09-01',
     likes: 0,
-    category: 'BotRAG Launch',
+    category: 'BotRAG ',
     image: 'https://res.cloudinary.com/dqedj96c7/image/upload/v1754861511/Screenshot_2026-09-01_at_14.54.22_g2s73r.png'
   }
 ]
