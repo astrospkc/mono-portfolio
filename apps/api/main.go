@@ -73,7 +73,7 @@ func main() {
 		})
 	})
 
-	port := ":8000"
+	port := ":8080"
 	fmt.Printf("🚀 GoFiber v3 API server running on http://localhost%s\n", port)
 	log.Fatal(app.Listen(port))
 }
